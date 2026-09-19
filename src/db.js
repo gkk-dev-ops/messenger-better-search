@@ -94,17 +94,20 @@ export async function putMessages(items) {
   const store = transaction.objectStore("messages");
 
   for (const item of items) {
-    const existing = await requestResult(store.get(item.id));
-    store.put(existing ? {
-      ...existing,
-      ...item,
-      transcript: item.transcript ?? existing.transcript,
-      imageContext: item.imageContext ?? existing.imageContext,
-      enrichment: {
-        ...(existing.enrichment || {}),
-        ...(item.enrichment || {})
-      }
-    } : item);
+    const request = store.get(item.id);
+    request.onsuccess = () => {
+      const existing = request.result;
+      store.put(existing ? {
+        ...existing,
+        ...item,
+        transcript: item.transcript ?? existing.transcript,
+        imageContext: item.imageContext ?? existing.imageContext,
+        enrichment: {
+          ...(existing.enrichment || {}),
+          ...(item.enrichment || {})
+        }
+      } : item);
+    };
   }
 
   await txDone(transaction);
@@ -157,29 +160,33 @@ export async function upsertConversation(conversation, addedMessages = 0) {
   const db = await openDb();
   const transaction = db.transaction("conversations", "readwrite");
   const store = transaction.objectStore("conversations");
-  const existing = await requestResult(store.get(conversation.id));
+  let merged;
 
-  const merged = {
-    ...(existing || {}),
-    ...conversation,
-    participants: [...new Set([
-      ...(existing?.participants || []),
-      ...(conversation.participants || [])
-    ])],
-    firstMessageAt: [existing?.firstMessageAt, conversation.firstMessageAt]
-      .filter(Boolean)
-      .reduce((min, value) => Math.min(min, value), Number.POSITIVE_INFINITY),
-    lastMessageAt: [existing?.lastMessageAt, conversation.lastMessageAt]
-      .filter(Boolean)
-      .reduce((max, value) => Math.max(max, value), 0),
-    messageCount: (existing?.messageCount || 0) + addedMessages,
-    updatedAt: Date.now()
+  const getRequest = store.get(conversation.id);
+  getRequest.onsuccess = () => {
+    const existing = getRequest.result;
+    merged = {
+      ...(existing || {}),
+      ...conversation,
+      participants: [...new Set([
+        ...(existing?.participants || []),
+        ...(conversation.participants || [])
+      ])],
+      firstMessageAt: [existing?.firstMessageAt, conversation.firstMessageAt]
+        .filter(Boolean)
+        .reduce((min, value) => Math.min(min, value), Number.POSITIVE_INFINITY),
+      lastMessageAt: [existing?.lastMessageAt, conversation.lastMessageAt]
+        .filter(Boolean)
+        .reduce((max, value) => Math.max(max, value), 0),
+      messageCount: (existing?.messageCount || 0) + addedMessages,
+      updatedAt: Date.now()
+    };
+
+    if (!Number.isFinite(merged.firstMessageAt)) merged.firstMessageAt = null;
+    if (!merged.lastMessageAt) merged.lastMessageAt = null;
+    store.put(merged);
   };
 
-  if (!Number.isFinite(merged.firstMessageAt)) merged.firstMessageAt = null;
-  if (!merged.lastMessageAt) merged.lastMessageAt = null;
-
-  store.put(merged);
   await txDone(transaction);
   return merged;
 }
