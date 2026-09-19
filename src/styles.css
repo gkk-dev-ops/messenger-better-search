@@ -60,3 +60,43 @@ details.group > summary { cursor:pointer; padding:12px 14px; font-weight:700; di
   .search-toolbar { grid-template-columns:1fr; }
   .search-shell { padding:16px; }
 }
+
+.import-drop {
+  min-height: 180px;
+  border: 1px dashed #46535e;
+  border-radius: 16px;
+  background: #0d1114;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 8px;
+  text-align: center;
+  padding: 24px;
+  cursor: pointer;
+  transition: border-color .2s ease, background .2s ease, transform .2s ease;
+}
+.import-drop:hover,
+.import-drop.dragging {
+  border-color: var(--accent);
+  background: rgba(183,255,71,.05);
+  transform: translateY(-1px);
+}
+.import-stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+.import-stats > div {
+  border: 1px solid var(--line);
+  background: #0d1114;
+  border-radius: 12px;
+  padding: 12px;
+  display: grid;
+  gap: 4px;
+}
+.import-stats strong {
+  font-size: 20px;
+}
+@media (max-width: 720px) {
+  .import-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
