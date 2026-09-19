@@ -1,4 +1,4 @@
-const { parseDateLabel, localDayKey } = globalThis.MessengerMemoryDate;
+const { parseDateLabel, localDayKey } = globalThis.MessengerBetterSearchDate;
 
 const state = {
   running: false,
