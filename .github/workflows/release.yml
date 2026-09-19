@@ -1,0 +1,71 @@
+name: Release
+
+on:
+  push:
+    branches: ["master"]
+    paths:
+      - "package.json"
+      - "manifest.json"
+      - "src/**"
+      - "scripts/**"
+      - ".github/workflows/release.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Read version
+        id: version
+        run: echo "version=$(node -p \"require('./package.json').version\")" >> "$GITHUB_OUTPUT"
+
+      - name: Check whether release exists
+        id: existing
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          if gh release view "v$VERSION" >/dev/null 2>&1; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Test
+        if: steps.existing.outputs.exists == 'false'
+        run: npm test
+
+      - name: Build
+        if: steps.existing.outputs.exists == 'false'
+        run: npm run build
+
+      - name: Package extension
+        if: steps.existing.outputs.exists == 'false'
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          cd dist
+          zip -r "../messenger-better-search-v$VERSION.zip" .
+
+      - name: Publish GitHub Release
+        if: steps.existing.outputs.exists == 'false'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          gh release create "v$VERSION"             "messenger-better-search-v$VERSION.zip"             --target "$GITHUB_SHA"             --title "Messenger Better Search v$VERSION"             --notes "First packaged release of Messenger Better Search.
+
+          Download the ZIP, unpack it, then open chrome://extensions, enable Developer mode and choose Load unpacked.
+
+          Local-first conversation search with optional BYOK transcription, image context and semantic search."
