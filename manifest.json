@@ -2,21 +2,14 @@
   "manifest_version": 3,
   "name": "Messenger Better Search",
   "version": "0.2.0",
-  "description": "Local-first Messenger archive, search and optional AI enrichment.",
+  "description": "Local-first search for your official Meta Messenger export.",
   "permissions": [
     "storage",
-    "unlimitedStorage",
-    "tabs"
-  ],
-  "host_permissions": [
-    "https://www.messenger.com/*",
-    "https://www.facebook.com/messages/*"
+    "unlimitedStorage"
   ],
   "optional_host_permissions": [
     "https://api.elevenlabs.io/*",
-    "https://api.openai.com/*",
-    "https://*.fbcdn.net/*",
-    "https://*.fbsbx.com/*"
+    "https://api.openai.com/*"
   ],
   "background": {
     "service_worker": "src/background.js",
@@ -33,30 +26,6 @@
     }
   },
   "options_page": "src/options.html",
-  "content_scripts": [
-    {
-      "matches": [
-        "https://www.messenger.com/*",
-        "https://www.facebook.com/messages/*"
-      ],
-      "js": [
-        "src/date-utils.js",
-        "src/content.js"
-      ],
-      "run_at": "document_idle"
-    }
-  ],
-  "web_accessible_resources": [
-    {
-      "resources": [
-        "src/search.html",
-        "src/styles.css"
-      ],
-      "matches": [
-        "<all_urls>"
-      ]
-    }
-  ],
   "icons": {
     "16": "src/icons/icon16.png",
     "32": "src/icons/icon32.png",

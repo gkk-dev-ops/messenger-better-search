@@ -26,6 +26,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+      - run: npm install --no-audit --no-fund
 
       - name: Read version
         id: version
@@ -50,6 +51,12 @@ jobs:
 
       - name: Build
         run: npm run build
+
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Extension E2E
+        run: xvfb-run -a npm run test:e2e
 
       - name: Package extension
         env:
