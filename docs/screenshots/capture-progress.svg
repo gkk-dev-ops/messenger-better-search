@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720">
+<rect width="1200" height="720" fill="#0b0d0f"/>
+<rect x="180" y="70" width="840" height="580" rx="30" fill="#12161a" stroke="#27313a"/>
+<rect x="220" y="110" width="44" height="44" rx="12" fill="#b7ff47"/><text x="242" y="140" text-anchor="middle" font-family="Arial" font-weight="700" font-size="22" fill="#10140a">M</text>
+<text x="280" y="128" font-family="Arial" font-weight="700" font-size="24" fill="#f5f7f8">Messenger Memory</text>
+<text x="280" y="150" font-family="Arial" font-size="15" fill="#98a2ad">open-source by GKD</text>
+<text x="230" y="215" font-family="Arial" font-size="15" fill="#98a2ad">Capture status</text>
+<rect x="230" y="230" width="130" height="34" rx="17" fill="#0f1316" stroke="#27313a"/>
+<circle cx="250" cy="247" r="7" fill="#b7ff47"/><text x="270" y="252" font-family="Arial" font-size="15" fill="#cfd7dd">running</text>
+<text x="840" y="215" font-family="Arial" font-size="15" fill="#98a2ad">Current date</text>
+<text x="840" y="255" font-family="Arial" font-weight="800" font-size="34" fill="#f5f7f8">24 May 2026</text>
+<rect x="230" y="300" width="740" height="12" rx="6" fill="#090b0d" stroke="#27313a"/>
+<rect x="230" y="300" width="455" height="12" rx="6" fill="#b7ff47"/>
+<text x="230" y="340" font-family="Arial" font-size="15" fill="#98a2ad">24 May 2026 → target 1 Jan 2026</text>
+<text x="230" y="405" font-family="Arial" font-size="15" fill="#98a2ad">Capture back to</text>
+<rect x="230" y="420" width="740" height="50" rx="12" fill="#0d1114" stroke="#27313a"/>
+<text x="252" y="452" font-family="Arial" font-size="17" fill="#f5f7f8">2026-01-01</text>
+<rect x="230" y="500" width="350" height="52" rx="13" fill="#b7ff47"/><text x="405" y="533" text-anchor="middle" font-family="Arial" font-size="17" font-weight="700" fill="#10140a">Pause capture</text>
+<rect x="600" y="500" width="370" height="52" rx="13" fill="#1c2329" stroke="#27313a"/><text x="785" y="533" text-anchor="middle" font-family="Arial" font-size="17" font-weight="700" fill="#f5f7f8">Resume from checkpoint</text>
+<text x="230" y="595" font-family="Arial" font-size="14" fill="#98a2ad">Switching tabs is supported. If Chrome reloads Messenger, progress is checkpointed.</text>
+</svg>

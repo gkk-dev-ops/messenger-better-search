@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720">
+<rect width="1200" height="720" fill="#0b0d0f"/>
+<text x="110" y="90" font-family="Arial" font-size="38" font-weight="800" fill="#f5f7f8">Local by default. AI only when you ask.</text>
+<text x="110" y="125" font-family="Arial" font-size="17" fill="#98a2ad">Bring your own keys · no GKD data backend</text>
+<rect x="110" y="175" width="980" height="150" rx="18" fill="#12161a" stroke="#27313a"/>
+<text x="140" y="215" font-family="Arial" font-size="21" font-weight="700" fill="#f5f7f8">Voice transcription</text>
+<text x="140" y="242" font-family="Arial" font-size="15" fill="#98a2ad">ElevenLabs Scribe v2</text>
+<rect x="960" y="205" width="82" height="38" rx="19" fill="#b7ff47"/><circle cx="1021" cy="224" r="15" fill="#10140a"/>
+<rect x="140" y="265" width="900" height="38" rx="10" fill="#0d1114" stroke="#27313a"/><text x="160" y="289" font-family="Arial" font-size="14" fill="#73808a">••••••••••••••••••••</text>
+<rect x="110" y="350" width="980" height="225" rx="18" fill="#12161a" stroke="#27313a"/>
+<text x="140" y="392" font-family="Arial" font-size="21" font-weight="700" fill="#f5f7f8">Image understanding + semantic search</text>
+<text x="140" y="420" font-family="Arial" font-size="15" fill="#98a2ad">OCR-like text, visual context and embeddings</text>
+<rect x="960" y="382" width="82" height="38" rx="19" fill="#b7ff47"/><circle cx="1021" cy="401" r="15" fill="#10140a"/>
+<rect x="140" y="450" width="900" height="38" rx="10" fill="#0d1114" stroke="#27313a"/><text x="160" y="474" font-family="Arial" font-size="14" fill="#73808a">OpenAI API key</text>
+<text x="140" y="530" font-family="Arial" font-size="15" fill="#cbd4da">Example indexed context: “SMS screenshot with verification code 483921”</text>
+</svg>
