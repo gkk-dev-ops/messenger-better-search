@@ -1,6 +1,6 @@
 # Privacy & threat model
 
-Messenger Memory is designed local-first.
+Messenger Better Search is designed local-first.
 
 ## Stored locally
 
