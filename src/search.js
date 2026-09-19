@@ -115,3 +115,17 @@ $("query").addEventListener("keydown", e => { if (e.key === "Enter") run(); });
 
 await loadSessions();
 await run();
+
+$("export").addEventListener("click", async () => {
+  const conversationId = $("conversation").value;
+  if (!conversationId) return;
+  const res = await chrome.runtime.sendMessage({ type:"EXPORT_CONVERSATION", conversationId });
+  if (!res.ok) return;
+  const blob = new Blob([JSON.stringify(res.archive, null, 2)], { type:"application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `messenger-memory-${conversationId}-${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+});
