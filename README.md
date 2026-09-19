@@ -1,12 +1,12 @@
-# Messenger Memory
+# Messenger Better Search
 
 > **Czy też masz problem z szukaniem w konwersacjach w Messengerze?**
 
-Pamiętasz, że ktoś coś Ci napisał, ale nie możesz już znaleźć gdzie? Messenger Memory jest open-source'owym rozszerzeniem, które pozwala odzyskać kontrolę nad własną historią rozmów: zebrać ją lokalnie, pogrupować, przeszukiwać i — opcjonalnie, z własnym kluczem API — wzbogacić o transkrypcje, opisy obrazów i wyszukiwanie semantyczne.
+Pamiętasz, że ktoś coś Ci napisał, ale nie możesz już znaleźć gdzie? Messenger Better Search jest open-source'owym rozszerzeniem, które pozwala odzyskać kontrolę nad własną historią rozmów: zebrać ją lokalnie, pogrupować, przeszukiwać i — opcjonalnie, z własnym kluczem API — wzbogacić o transkrypcje, opisy obrazów i wyszukiwanie semantyczne.
 
 **Twoje dane domyślnie zostają u Ciebie. Bring your own key.**
 
-Messenger Memory powstaje jako open-source project by GKD.
+Messenger Better Search powstaje jako open-source project by GKD.
 
 ## Co robi
 
@@ -40,7 +40,7 @@ To oznacza, że możesz przełączyć się na inną kartę i capture może dalej
 
 Istnieje ważne ograniczenie platformy: Chrome może ograniczyć działanie ukrytej karty albo całkowicie ją **discardować/reloadować**, szczególnie przy presji pamięci. Service worker ani offscreen document nie mają dostępu do DOM Messengera, więc nie możemy kontynuować scrollowania po usunięciu dokumentu strony.
 
-Dlatego Messenger Memory zapisuje:
+Dlatego Messenger Better Search zapisuje:
 
 - ostatnią osiągniętą datę,
 - target date,
@@ -53,8 +53,8 @@ Po ponownym otwarciu karty użyj **Resume from checkpoint**.
 ## Instalacja lokalna
 
 ```bash
-git clone https://github.com/gkk-dev-ops/messenger-exporter.git
-cd messenger-exporter
+git clone https://github.com/gkk-dev-ops/messenger-better-search.git
+cd messenger-better-search
 npm run build
 ```
 
