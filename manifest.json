@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Messenger Memory",
+  "name": "Messenger Better Search",
   "version": "0.1.0",
   "description": "Local-first Messenger archive, search and optional AI enrichment.",
   "permissions": ["storage", "unlimitedStorage", "tabs"],
@@ -15,7 +15,7 @@
     "https://*.fbsbx.com/*"
   ],
   "background": { "service_worker": "src/background.js", "type": "module" },
-  "action": { "default_popup": "src/popup.html", "default_title": "Messenger Memory" },
+  "action": { "default_popup": "src/popup.html", "default_title": "Messenger Better Search" },
   "options_page": "src/options.html",
   "content_scripts": [
     {
