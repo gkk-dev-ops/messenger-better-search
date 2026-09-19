@@ -46,20 +46,25 @@ jobs:
           fi
 
       - name: Test
-        if: steps.existing.outputs.exists == 'false'
         run: npm test
 
       - name: Build
-        if: steps.existing.outputs.exists == 'false'
         run: npm run build
 
       - name: Package extension
-        if: steps.existing.outputs.exists == 'false'
         env:
           VERSION: ${{ steps.version.outputs.version }}
         run: |
           cd dist
           zip -r "../messenger-better-search-v$VERSION.zip" .
+
+      - name: Update existing release asset
+        if: steps.existing.outputs.exists == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          gh release upload "v$VERSION" "messenger-better-search-v$VERSION.zip" --clobber
 
       - name: Publish GitHub Release
         if: steps.existing.outputs.exists == 'false'
