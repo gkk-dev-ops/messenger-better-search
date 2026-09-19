@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Search — Messenger Memory</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<main class="search-shell">
+  <div class="brand">
+    <div class="brand-mark">M</div>
+    <div class="brand-copy"><strong>Conversation archive</strong><span>Search what Messenger forgot how to find</span></div>
+  </div>
+
+  <section class="hero">
+    <h1>Find the thing you remember, not the exact words.</h1>
+    <p>Search captured text, voice transcripts and image descriptions. Collapse years, months, weeks or days; optionally enable semantic search for wider context.</p>
+  </section>
+
+  <section class="card" style="margin-top:18px">
+    <div class="search-toolbar">
+      <input id="query" placeholder="e.g. soft flask stand, SMS code, trip in May…" />
+      <input id="from" type="date" />
+      <input id="to" type="date" />
+      <button id="run" class="primary">Search</button>
+    </div>
+    <div class="row" style="margin-top:10px; flex-wrap:wrap">
+      <select id="conversation" style="max-width:280px"></select>
+      <select id="groupBy" style="max-width:180px">
+        <option value="day">Group by day</option>
+        <option value="week">Group by week</option>
+        <option value="month">Group by month</option>
+        <option value="year">Group by year</option>
+      </select>
+      <label class="pill"><input id="semantic" type="checkbox" style="width:auto"> semantic</label>
+      <span id="count" class="muted"></span>
+    </div>
+  </section>
+
+  <section id="timeline" class="timeline"></section>
+</main>
+<script type="module" src="search.js"></script>
+</body>
+</html>
