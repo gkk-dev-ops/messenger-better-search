@@ -12,11 +12,6 @@ const PROVIDER_ORIGINS = {
   openai: "https://api.openai.com/*"
 };
 
-const MESSENGER_MEDIA_ORIGINS = [
-  "https://*.fbcdn.net/*",
-  "https://*.fbsbx.com/*"
-];
-
 /**
  * Shows settings success or failure feedback.
  * @param {string} message
@@ -45,10 +40,8 @@ async function ensureOriginsPermission(origins) {
  * @param {boolean} includeMessengerMedia
  * @returns {Promise<boolean>}
  */
-async function ensureProviderPermission(provider, includeMessengerMedia = false) {
-  const origins = [PROVIDER_ORIGINS[provider]];
-  if (includeMessengerMedia) origins.push(...MESSENGER_MEDIA_ORIGINS);
-  return ensureOriginsPermission(origins);
+async function ensureProviderPermission(provider) {
+  return ensureOriginsPermission([PROVIDER_ORIGINS[provider]]);
 }
 
 /**
@@ -88,16 +81,16 @@ document.getElementById("save").addEventListener("click", async () => {
     }
 
     if (settings.enableTranscription) {
-      const granted = await ensureProviderPermission("elevenlabs", true);
+      const granted = await ensureProviderPermission("elevenlabs");
       if (!granted) {
-        throw new Error("ElevenLabs and Messenger media permissions were not granted.");
+        throw new Error("ElevenLabs permission was not granted.");
       }
     }
 
     if (settings.enableVision) {
-      const granted = await ensureProviderPermission("openai", true);
+      const granted = await ensureProviderPermission("openai");
       if (!granted) {
-        throw new Error("OpenAI and Messenger media permissions were not granted.");
+        throw new Error("OpenAI permission was not granted.");
       }
     } else if (settings.enableEmbeddings) {
       const granted = await ensureProviderPermission("openai");
