@@ -1,6 +1,6 @@
 import "./date-utils.js";
 
-const { localDayKey } = globalThis.MessengerMemoryDate;
+const { localDayKey } = globalThis.MessengerBetterSearchDate;
 const $ = id => document.getElementById(id);
 const OPENAI_ORIGIN = "https://api.openai.com/*";
 let sessions = [];
@@ -293,7 +293,7 @@ $("export").addEventListener("click", async () => {
     const anchor = document.createElement("a");
     anchor.href = url;
     anchor.download =
-      `messenger-memory-${conversationId}-${localDayKey(new Date())}.json`;
+      `messenger-better-search-${conversationId}-${localDayKey(new Date())}.json`;
     anchor.click();
     setTimeout(() => URL.revokeObjectURL(url), 1000);
   } catch (error) {
