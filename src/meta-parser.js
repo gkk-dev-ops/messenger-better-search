@@ -266,10 +266,7 @@ export function normalizeMetaConversation(document, sourcePath) {
  * existingCounts is the number of records already stored for each fingerprint.
  * @param {object[]} messages
  * @param {Map<string, number>} existingCounts
- * @returns {{insert: object[], skipped: number, resultingCounts: Map<string, number>}}
- */
-export function deduplicateImportedMessages(messages, existingCounts = new Map()) {
-  const seenThisImport = new Map();
+ * @param {Map<string, number>} seenThisImport Fingerprint counts already seen in the current import for this conversation.\n * @returns {{insert: object[], skipped: number, resultingCounts: Map<string, number>}}\n */\nexport function deduplicateImportedMessages(messages, existingCounts = new Map(), seenThisImport = new Map()) {
   const insert = [];
   let skipped = 0;
   const resultingCounts = new Map(existingCounts);
