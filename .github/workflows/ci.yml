@@ -15,11 +15,11 @@ jobs:
           node-version: 22
       - run: npm test
       - run: npm run build
-      - run: cd dist && zip -r ../messenger-memory.zip .
+      - run: cd dist && zip -r ../messenger-better-search.zip .
       - uses: actions/upload-artifact@v4
         with:
-          name: messenger-memory-extension
-          path: messenger-memory.zip
+          name: messenger-better-search-extension
+          path: messenger-better-search.zip
 
   chrome-web-store-mock:
     runs-on: ubuntu-latest
