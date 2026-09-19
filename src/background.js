@@ -1,7 +1,9 @@
 import {
+  getArchiveStats,
   getEmbeddings,
   getMessages,
   getSession,
+  listConversations,
   listSessions,
   putEmbedding,
   putMessages,
@@ -80,6 +82,16 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
       return;
     }
 
+    if (message.type === "LIST_CONVERSATIONS") {
+      sendResponse({ ok: true, conversations: await listConversations() });
+      return;
+    }
+
+    if (message.type === "GET_ARCHIVE_STATS") {
+      sendResponse({ ok: true, stats: await getArchiveStats() });
+      return;
+    }
+
     if (message.type === "LIST_SESSIONS") {
       sendResponse({ ok: true, sessions: await listSessions() });
       return;
@@ -97,14 +109,15 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
 
     if (message.type === "EXPORT_CONVERSATION") {
       const messages = await getMessages(message.conversationId);
-      const session = await getSession(message.conversationId);
+      const conversation = (await listConversations())
+        .find(item => item.id === message.conversationId) || null;
       sendResponse({
         ok: true,
         archive: {
           format: "messenger-better-search",
-          version: 1,
+          version: 2,
           exportedAt: new Date().toISOString(),
-          session,
+          conversation,
           messages
         }
       });
