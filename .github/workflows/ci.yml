@@ -1,0 +1,30 @@
+name: CI
+
+on:
+  push:
+    branches: ["master", "feat/**"]
+  pull_request:
+
+jobs:
+  test-build-package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm test
+      - run: npm run build
+      - run: cd dist && zip -r ../messenger-memory.zip .
+      - uses: actions/upload-artifact@v4
+        with:
+          name: messenger-memory-extension
+          path: messenger-memory.zip
+
+  chrome-web-store-mock:
+    runs-on: ubuntu-latest
+    needs: test-build-package
+    steps:
+      - run: |
+          echo "Chrome Web Store publish is intentionally mocked."
+          echo "TODO: configure extension id + refresh token/client credentials and replace this step."
