@@ -101,7 +101,7 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
       sendResponse({
         ok: true,
         archive: {
-          format: "messenger-memory",
+          format: "messenger-better-search",
           version: 1,
           exportedAt: new Date().toISOString(),
           session,
