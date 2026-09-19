@@ -6,6 +6,10 @@ Pamiętasz, że ktoś coś Ci napisał, ale nie możesz już znaleźć gdzie? Me
 
 **Twoje dane domyślnie zostają u Ciebie. Bring your own key.**
 
+## Download
+
+Gotowe paczki rozszerzenia są publikowane w [GitHub Releases](https://github.com/gkk-dev-ops/messenger-better-search/releases/latest). Pobierz ZIP z najnowszego release, rozpakuj go i załaduj katalog przez `chrome://extensions` → **Load unpacked**.
+
 Messenger Better Search powstaje jako open-source project by GKD.
 
 ## Co robi
