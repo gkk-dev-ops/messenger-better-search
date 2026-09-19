@@ -60,6 +60,22 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       return;
     }
 
+    if (message.type === "EXPORT_CONVERSATION") {
+      const messages = await getMessages(message.conversationId);
+      const session = await getSession(message.conversationId);
+      sendResponse({
+        ok: true,
+        archive: {
+          format: "messenger-memory",
+          version: 1,
+          exportedAt: new Date().toISOString(),
+          session,
+          messages
+        }
+      });
+      return;
+    }
+
     if (message.type === "SEARCH_MESSAGES") {
       sendResponse({ ok: true, results: await searchMessages(message) });
       return;
