@@ -20,14 +20,14 @@
 
   <section class="card" style="margin-top:18px">
     <div class="search-toolbar">
-      <input id="query" placeholder="e.g. soft flask stand, SMS code, trip in May…" />
-      <input id="from" type="date" />
-      <input id="to" type="date" />
+      <input id="query" aria-label="Search query" placeholder="e.g. soft flask stand, SMS code, trip in May…" />
+      <input id="from" aria-label="Search from date" type="date" />
+      <input id="to" aria-label="Search to date" type="date" />
       <button id="run" class="primary">Search</button>
     </div>
     <div class="row" style="margin-top:10px; flex-wrap:wrap">
-      <select id="conversation" style="max-width:280px"></select>
-      <select id="groupBy" style="max-width:180px">
+      <select id="conversation" aria-label="Conversation" style="max-width:280px"></select>
+      <select id="groupBy" aria-label="Group results by" style="max-width:180px">
         <option value="day">Group by day</option>
         <option value="week">Group by week</option>
         <option value="month">Group by month</option>

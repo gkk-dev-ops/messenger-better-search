@@ -6,7 +6,9 @@
   "permissions": ["storage", "unlimitedStorage", "tabs"],
   "host_permissions": [
     "https://www.messenger.com/*",
-    "https://www.facebook.com/messages/*",
+    "https://www.facebook.com/messages/*"
+  ],
+  "optional_host_permissions": [
     "https://api.elevenlabs.io/*",
     "https://api.openai.com/*"
   ],
@@ -16,7 +18,7 @@
   "content_scripts": [
     {
       "matches": ["https://www.messenger.com/*", "https://www.facebook.com/messages/*"],
-      "js": ["src/content.js"],
+      "js": ["src/date-utils.js", "src/content.js"],
       "run_at": "document_idle"
     }
   ],
