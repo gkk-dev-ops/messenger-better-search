@@ -103,12 +103,43 @@ function nearestPrecedingDate(node, markers) {
 }
 
 /**
+ * Derives a best-effort stable identity from Messenger DOM attributes, falling
+ * back to surrounding message context so repeated equal messages do not collide.
+ * @param {Element} node
+ * @param {number} index
+ * @param {Element[]} nodes
+ * @returns {string}
+ */
+function messageIdentityHint(node, index, nodes) {
+  const direct = [
+    node.getAttribute("data-message-id"),
+    node.getAttribute("data-testid"),
+    node.id,
+    node.getAttribute("aria-labelledby"),
+    node.getAttribute("aria-describedby"),
+    node.querySelector("[data-message-id]")?.getAttribute("data-message-id"),
+    node.querySelector("[id]")?.id
+  ].find(Boolean);
+
+  if (direct) return `dom:${direct}`;
+
+  const context = [];
+  for (let offset = -2; offset <= 2; offset++) {
+    const neighbor = nodes[index + offset];
+    if (!neighbor) continue;
+    context.push(`${offset}:${neighbor.innerText?.trim().slice(0, 180) || ""}`);
+  }
+  return `context:${index}:${context.join("|")}`;
+}
+
+/**
  * Converts one visible Messenger message-like node into a local archive record.
  * @param {Element} node
  * @param {{ts:number,text:string}|null} inheritedDate
+ * @param {string} identityHint
  * @returns {object|null}
  */
-function normalizeMessageNode(node, inheritedDate) {
+function normalizeMessageNode(node, inheritedDate, identityHint) {
   const text = node.innerText?.trim() || "";
   if (text && text.length <= 60 && DATE_LABEL_RE.test(text) && parseDateLabel(text)) return null;
 
@@ -138,6 +169,7 @@ function normalizeMessageNode(node, inheritedDate) {
 
   const fingerprint = [
     state.conversationId,
+    identityHint,
     timestamp,
     sender,
     text,
@@ -178,11 +210,13 @@ function collectMessages(scroller) {
   const items = [];
 
   for (const selector of selectors) {
-    for (const node of root.querySelectorAll(selector)) {
+    const nodes = [...root.querySelectorAll(selector)];
+    for (const [index, node] of nodes.entries()) {
       if (seen.has(node)) continue;
       seen.add(node);
       const date = nearestPrecedingDate(node, markers);
-      const item = normalizeMessageNode(node, date);
+      const identityHint = messageIdentityHint(node, index, nodes);
+      const item = normalizeMessageNode(node, date, identityHint);
       if (item) items.push(item);
     }
     if (items.length) break;

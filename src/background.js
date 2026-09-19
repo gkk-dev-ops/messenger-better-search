@@ -285,13 +285,14 @@ async function enrichMessage(message, context = {}) {
     enrichment: { ...(message.enrichment || {}) }
   };
 
-  await runProviderStep("elevenlabs", context, async () => {
-    if (
-      cfg.enableTranscription &&
-      cfg.elevenLabsKey &&
-      message.media?.audio?.[0] &&
-      !patch.transcript
-    ) {
+  const needsTranscription =
+    cfg.enableTranscription &&
+    cfg.elevenLabsKey &&
+    message.media?.audio?.[0] &&
+    !patch.transcript;
+
+  if (needsTranscription) {
+    await runProviderStep("elevenlabs", context, async () => {
       patch.transcript = await transcribeAudio(
         message.media.audio[0],
         cfg.elevenLabsKey
@@ -300,26 +301,33 @@ async function enrichMessage(message, context = {}) {
         provider: "elevenlabs",
         at: Date.now()
       };
-    }
-  });
+    });
+  }
 
-  await runProviderStep("openai", context, async () => {
-    if (
-      cfg.enableVision &&
-      cfg.openAiKey &&
-      message.media?.images?.length &&
-      !patch.imageContext
-    ) {
-      patch.imageContext = [];
-      for (const image of message.media.images.slice(0, 4)) {
-        patch.imageContext.push(await describeImage(image.src, cfg.openAiKey));
+  const needsVision =
+    cfg.enableVision &&
+    cfg.openAiKey &&
+    message.media?.images?.length &&
+    !patch.imageContext;
+
+  const embeddingText = searchableText(patch);
+  const needsEmbedding =
+    cfg.enableEmbeddings &&
+    cfg.openAiKey &&
+    embeddingText.trim();
+
+  if (needsVision || needsEmbedding) {
+    await runProviderStep("openai", context, async () => {
+      if (needsVision) {
+        patch.imageContext = [];
+        for (const image of message.media.images.slice(0, 4)) {
+          patch.imageContext.push(await describeImage(image.src, cfg.openAiKey));
+        }
+        patch.enrichment.vision = { provider: "openai", at: Date.now() };
       }
-      patch.enrichment.vision = { provider: "openai", at: Date.now() };
-    }
 
-    if (cfg.enableEmbeddings && cfg.openAiKey) {
-      const text = searchableText(patch);
-      if (text.trim()) {
+      if (needsEmbedding) {
+        const text = searchableText(patch);
         const vector = await embed(text, cfg.openAiKey);
         await putEmbedding(patch.id, vector);
         patch.enrichment.embedding = {
@@ -328,8 +336,8 @@ async function enrichMessage(message, context = {}) {
           at: Date.now()
         };
       }
-    }
-  });
+    });
+  }
 
   await putMessages([patch]);
   return patch;

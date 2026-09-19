@@ -12,6 +12,11 @@ const PROVIDER_ORIGINS = {
   openai: "https://api.openai.com/*"
 };
 
+const MESSENGER_MEDIA_ORIGINS = [
+  "https://*.fbcdn.net/*",
+  "https://*.fbsbx.com/*"
+];
+
 /**
  * Shows settings success or failure feedback.
  * @param {string} message
@@ -28,11 +33,22 @@ function showStatus(message, isError = false) {
  * @param {"elevenlabs"|"openai"} provider
  * @returns {Promise<boolean>}
  */
-async function ensureProviderPermission(provider) {
-  const origin = PROVIDER_ORIGINS[provider];
-  const hasPermission = await chrome.permissions.contains({ origins: [origin] });
+async function ensureOriginsPermission(origins) {
+  const hasPermission = await chrome.permissions.contains({ origins });
   if (hasPermission) return true;
-  return chrome.permissions.request({ origins: [origin] });
+  return chrome.permissions.request({ origins });
+}
+
+/**
+ * Requests one provider origin and, when needed, Messenger CDN access.
+ * @param {"elevenlabs"|"openai"} provider
+ * @param {boolean} includeMessengerMedia
+ * @returns {Promise<boolean>}
+ */
+async function ensureProviderPermission(provider, includeMessengerMedia = false) {
+  const origins = [PROVIDER_ORIGINS[provider]];
+  if (includeMessengerMedia) origins.push(...MESSENGER_MEDIA_ORIGINS);
+  return ensureOriginsPermission(origins);
 }
 
 /**
@@ -72,11 +88,18 @@ document.getElementById("save").addEventListener("click", async () => {
     }
 
     if (settings.enableTranscription) {
-      const granted = await ensureProviderPermission("elevenlabs");
-      if (!granted) throw new Error("ElevenLabs permission was not granted.");
+      const granted = await ensureProviderPermission("elevenlabs", true);
+      if (!granted) {
+        throw new Error("ElevenLabs and Messenger media permissions were not granted.");
+      }
     }
 
-    if (settings.enableVision || settings.enableEmbeddings) {
+    if (settings.enableVision) {
+      const granted = await ensureProviderPermission("openai", true);
+      if (!granted) {
+        throw new Error("OpenAI and Messenger media permissions were not granted.");
+      }
+    } else if (settings.enableEmbeddings) {
       const granted = await ensureProviderPermission("openai");
       if (!granted) throw new Error("OpenAI permission was not granted.");
     }

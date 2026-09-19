@@ -10,7 +10,9 @@
   ],
   "optional_host_permissions": [
     "https://api.elevenlabs.io/*",
-    "https://api.openai.com/*"
+    "https://api.openai.com/*",
+    "https://*.fbcdn.net/*",
+    "https://*.fbsbx.com/*"
   ],
   "background": { "service_worker": "src/background.js", "type": "module" },
   "action": { "default_popup": "src/popup.html", "default_title": "Messenger Memory" },
