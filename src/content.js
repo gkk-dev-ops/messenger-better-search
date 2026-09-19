@@ -104,13 +104,14 @@ function normalizeMessageNode(node, inheritedDate) {
     height: img.naturalHeight || null
   })).filter(x => x.src && !x.src.startsWith("data:"));
 
-  const audio = [...node.querySelectorAll("audio, source")].map(el => el.currentSrc || el.src).filter(Boolean);
+  const audio = [...node.querySelectorAll("audio, source[type^='audio']")].map(el => el.currentSrc || el.src).filter(Boolean);
+  const video = [...node.querySelectorAll("video, source[type^='video']")].map(el => el.currentSrc || el.src).filter(Boolean);
   const time = node.querySelector("time");
   const timestamp = time?.dateTime ? Date.parse(time.dateTime) : inheritedDate?.ts || null;
 
-  if (!text && !imgs.length && !audio.length) return null;
+  if (!text && !imgs.length && !audio.length && !video.length) return null;
   const sender = node.getAttribute("aria-label") || node.querySelector("[dir='auto']")?.getAttribute("aria-label") || null;
-  const fingerprint = [state.conversationId, timestamp, sender, text, imgs.map(x => x.src).join("|"), audio.join("|")].join("::");
+  const fingerprint = [state.conversationId, timestamp, sender, text, imgs.map(x => x.src).join("|"), audio.join("|"), video.join("|")].join("::");
 
   return {
     id: hash(fingerprint),
@@ -119,7 +120,7 @@ function normalizeMessageNode(node, inheritedDate) {
     text,
     timestamp,
     dayKey: timestamp ? new Date(timestamp).toISOString().slice(0,10) : "unknown",
-    media: { images: imgs, audio },
+    media: { images: imgs, audio, video },
     capturedAt: Date.now(),
     sourceUrl: location.href
   };
