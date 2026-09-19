@@ -9,45 +9,37 @@
 <body>
   <main class="app-shell">
     <div class="brand">
-      <div class="brand-mark">M</div>
-      <div class="brand-copy"><strong>Messenger Better Search</strong><span>open-source by GKD</span></div>
+      <img src="icons/icon48.png" width="34" height="34" alt="" />
+      <div class="brand-copy">
+        <strong>Messenger Better Search</strong>
+        <span>local-first · open-source by GKD</span>
+      </div>
     </div>
 
     <section class="card">
       <div class="row-between">
         <div>
-          <div class="label">Capture status</div>
-          <div class="pill"><span id="statusDot" class="dot"></span><span id="statusText">Checking…</span></div>
+          <div class="label">MESSAGES</div>
+          <div class="metric" id="messageCount">—</div>
         </div>
         <div style="text-align:right">
-          <div class="label">Current date</div>
-          <div class="metric" id="currentDate">—</div>
+          <div class="label">CONVERSATIONS</div>
+          <div class="metric" id="conversationCount">—</div>
         </div>
       </div>
-      <div class="progress" style="margin-top:14px"><span id="progressBar"></span></div>
-      <div class="row-between" style="margin-top:8px">
-        <small id="rangeText">No active capture</small>
-        <small id="conversationText"></small>
-      </div>
-      <div id="reason" class="status-reason" hidden style="margin-top:12px"></div>
+      <small id="lastImport" class="muted">Checking local archive…</small>
     </section>
 
     <section class="card stack">
-      <label>
-        <div class="label" style="margin-bottom:6px">Capture back to</div>
-        <input id="targetDate" type="date" />
-      </label>
-      <div class="row">
-        <button id="start" class="primary" style="flex:1">Start capture</button>
-        <button id="pause" class="secondary" style="flex:1">Pause</button>
-      </div>
-      <button id="resume" class="secondary">Resume from checkpoint</button>
-      <small>Keep the Messenger tab open. Switching tabs is supported; if Chrome discards or reloads Messenger, the session checkpoints and can be resumed.</small>
+      <strong id="onboardingTitle">Import your Messenger history</strong>
+      <span id="onboardingCopy" class="muted">Use Meta's official Export Your Information JSON. No Messenger scraping or automated scrolling.</span>
+      <button id="import" class="primary">Import Meta export</button>
+      <button id="search" class="secondary">Search archive</button>
     </section>
 
     <div class="nav">
-      <button id="search" class="secondary">Search archive</button>
       <button id="settings" class="secondary">Settings</button>
+      <a class="button secondary" href="https://gkd.agency" target="_blank" rel="noopener noreferrer">GKD ↗</a>
     </div>
   </main>
   <script type="module" src="popup.js"></script>
