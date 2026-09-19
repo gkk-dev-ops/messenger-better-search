@@ -1,4 +1,4 @@
-const DB_NAME = "messenger-memory";
+const DB_NAME = "messenger-better-search";
 const DB_VERSION = 1;
 
 /**
