@@ -16,6 +16,8 @@ jobs:
       - run: npm install --no-audit --no-fund
       - run: npm test
       - run: npm run build
+      - run: npx playwright install --with-deps chromium
+      - run: xvfb-run -a npm run test:e2e
       - run: cd dist && zip -r ../messenger-better-search.zip .
       - uses: actions/upload-artifact@v4
         with:
