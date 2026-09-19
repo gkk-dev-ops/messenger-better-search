@@ -3,7 +3,7 @@ import "./date-utils.js";
 const { localDayKey } = globalThis.MessengerBetterSearchDate;
 const $ = id => document.getElementById(id);
 const OPENAI_ORIGIN = "https://api.openai.com/*";
-let sessions = [];
+let conversations = [];
 
 /**
  * Escapes untrusted captured text before inserting it into archive HTML.
@@ -138,18 +138,21 @@ async function ensureOpenAiPermission() {
  * Loads conversation sessions into the archive selector.
  * @returns {Promise<void>}
  */
-async function loadSessions() {
-  const response = await chrome.runtime.sendMessage({ type: "LIST_SESSIONS" });
+async function loadConversations() {
+  const response = await chrome.runtime.sendMessage({ type: "LIST_CONVERSATIONS" });
   if (!response?.ok) {
     throw new Error(response?.error || "Could not load conversations.");
   }
 
-  sessions = (response.sessions || [])
-    .sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0));
-
-  $("conversation").innerHTML = sessions.map(session =>
-    `<option value="${escapeHtml(session.conversationId)}">${escapeHtml(session.conversationId)} · ${session.currentDate ? new Date(session.currentDate).toLocaleDateString() : "no date"}</option>`
+  conversations = response.conversations || [];
+  $("conversation").innerHTML = conversations.map(conversation =>
+    `<option value="${escapeHtml(conversation.id)}">${escapeHtml(conversation.title || conversation.id)} · ${(conversation.messageCount || 0).toLocaleString()} messages</option>`
   ).join("");
+
+  if (!conversations.length) {
+    $("timeline").innerHTML =
+      '<div class="card"><strong>No imported conversations yet.</strong><p class="muted">Import a Meta Export Your Information JSON archive first.</p></div>';
+  }
 }
 
 /**
@@ -303,9 +306,14 @@ $("export").addEventListener("click", async () => {
 });
 
 try {
-  await loadSessions();
+  await loadConversations();
   await run();
 } catch (error) {
   $("timeline").innerHTML =
     `<div class="card status-reason">${escapeHtml(String(error?.message || error))}</div>`;
 }
+
+
+$("importMore").addEventListener("click", () => {
+  location.href = chrome.runtime.getURL("src/importer.html");
+});
