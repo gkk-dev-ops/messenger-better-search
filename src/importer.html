@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Import — Messenger Better Search</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="search-shell">
+    <div class="brand">
+      <img src="icons/icon48.png" width="38" height="38" alt="" />
+      <div class="brand-copy">
+        <strong>Messenger Better Search</strong>
+        <span>Official Meta export importer</span>
+      </div>
+    </div>
+
+    <section class="hero">
+      <div class="label">COMPLIANT INGESTION</div>
+      <h1>Import the history Meta gives you.</h1>
+      <p>Choose a JSON Meta Export Your Information ZIP. Parsing and indexing happen locally in this browser profile. Messenger Better Search does not log in to Messenger or automate its UI.</p>
+      <div class="row" style="margin-top:16px;flex-wrap:wrap">
+        <a class="button secondary" href="https://accountscenter.facebook.com/info_and_permissions/" target="_blank" rel="noopener noreferrer">Open Meta Accounts Center ↗</a>
+      </div>
+    </section>
+
+    <section class="card stack" style="margin-top:18px">
+      <label class="import-drop" id="dropZone">
+        <strong>Drop Meta export ZIP or JSON files here</strong>
+        <span class="muted">or click to select files</span>
+        <input id="files" type="file" accept=".zip,.json,application/zip,application/json" multiple hidden />
+      </label>
+      <small>For the Meta export choose <strong>Messages</strong> and <strong>JSON</strong>. Multiple ZIP parts are supported.</small>
+    </section>
+
+    <section id="progressCard" class="card stack" hidden>
+      <div class="row-between">
+        <div>
+          <div class="label">Import status</div>
+          <strong id="status">Preparing…</strong>
+        </div>
+        <span class="pill" id="fileProgress">0 / 0 files</span>
+      </div>
+      <div class="progress"><span id="progressBar"></span></div>
+      <div class="import-stats">
+        <div><span class="label">Conversations</span><strong id="conversationCount">0</strong></div>
+        <div><span class="label">Messages added</span><strong id="messageCount">0</strong></div>
+        <div><span class="label">Duplicates skipped</span><strong id="duplicateCount">0</strong></div>
+        <div><span class="label">JSON chunks</span><strong id="chunkCount">0</strong></div>
+      </div>
+      <small id="currentPath" class="muted"></small>
+      <div id="importError" class="status-reason" hidden></div>
+    </section>
+
+    <section id="doneCard" class="card stack" hidden>
+      <strong>Import complete</strong>
+      <span id="doneSummary" class="muted"></span>
+      <div class="row">
+        <button id="searchArchive" class="primary">Search archive</button>
+        <button id="importMore" class="secondary">Import newer history</button>
+      </div>
+    </section>
+  </main>
+  <script type="module" src="importer.js"></script>
+</body>
+</html>
