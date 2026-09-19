@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Messenger Memory</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="app-shell">
+    <div class="brand">
+      <div class="brand-mark">M</div>
+      <div class="brand-copy"><strong>Messenger Memory</strong><span>open-source by GKD</span></div>
+    </div>
+
+    <section class="card">
+      <div class="row-between">
+        <div>
+          <div class="label">Capture status</div>
+          <div class="pill"><span id="statusDot" class="dot"></span><span id="statusText">Checking…</span></div>
+        </div>
+        <div style="text-align:right">
+          <div class="label">Current date</div>
+          <div class="metric" id="currentDate">—</div>
+        </div>
+      </div>
+      <div class="progress" style="margin-top:14px"><span id="progressBar"></span></div>
+      <div class="row-between" style="margin-top:8px">
+        <small id="rangeText">No active capture</small>
+        <small id="conversationText"></small>
+      </div>
+      <div id="reason" class="status-reason" hidden style="margin-top:12px"></div>
+    </section>
+
+    <section class="card stack">
+      <label>
+        <div class="label" style="margin-bottom:6px">Capture back to</div>
+        <input id="targetDate" type="date" />
+      </label>
+      <div class="row">
+        <button id="start" class="primary" style="flex:1">Start capture</button>
+        <button id="pause" class="secondary" style="flex:1">Pause</button>
+      </div>
+      <button id="resume" class="secondary">Resume from checkpoint</button>
+      <small>Keep the Messenger tab open. Switching tabs is supported; if Chrome discards or reloads Messenger, the session checkpoints and can be resumed.</small>
+    </section>
+
+    <div class="nav">
+      <button id="search" class="secondary">Search archive</button>
+      <button id="settings" class="secondary">Settings</button>
+    </div>
+  </main>
+  <script type="module" src="popup.js"></script>
+</body>
+</html>
