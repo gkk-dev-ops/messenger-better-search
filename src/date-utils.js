@@ -95,7 +95,7 @@
     return `${year}-${month}-${day}`;
   }
 
-  root.MessengerMemoryDate = Object.freeze({
+  root.MessengerBetterSearchDate = Object.freeze({
     buildValidatedLocalDate,
     parseDateLabel,
     localDayKey
