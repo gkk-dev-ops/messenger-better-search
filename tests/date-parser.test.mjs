@@ -5,7 +5,7 @@ import "../src/date-utils.js";
 const {
   parseDateLabel,
   localDayKey
-} = globalThis.MessengerMemoryDate;
+} = globalThis.MessengerBetterSearchDate;
 
 const NOW = new Date(2026, 8, 19, 12, 0, 0, 0);
 
