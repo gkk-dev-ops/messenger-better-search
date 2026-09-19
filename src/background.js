@@ -70,6 +70,11 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       return;
     }
 
+    if (message.type === "ANALYZE_GROUP") {
+      sendResponse({ ok: true, analysis: await analyzeGroup(message.messages || []) });
+      return;
+    }
+
     if (message.type === "GET_SETTINGS") {
       sendResponse({ ok: true, settings: await settings() });
       return;
@@ -144,7 +149,21 @@ async function transcribeAudio(url, key) {
   return data.text || "";
 }
 
+async function fetchAsDataUrl(url) {
+  const media = await fetch(url, { credentials: "include" });
+  if (!media.ok) throw new Error("Could not fetch Messenger image: " + media.status);
+  const blob = await media.blob();
+  const bytes = new Uint8Array(await blob.arrayBuffer());
+  let binary = "";
+  const chunk = 0x8000;
+  for (let i = 0; i < bytes.length; i += chunk) {
+    binary += String.fromCharCode(...bytes.subarray(i, i + chunk));
+  }
+  return `data:${blob.type || "image/jpeg"};base64,${btoa(binary)}`;
+}
+
 async function describeImage(url, key) {
+  const imageData = url.startsWith("data:") ? url : await fetchAsDataUrl(url);
   const res = await fetch("https://api.openai.com/v1/chat/completions", {
     method: "POST",
     headers: {
@@ -157,7 +176,7 @@ async function describeImage(url, key) {
         role: "user",
         content: [
           { type: "text", text: "Describe this Messenger image for future search. Include visible text (OCR-like), objects, product names if evident, and why it may matter in conversation. Be factual and concise." },
-          { type: "image_url", image_url: { url } }
+          { type: "image_url", image_url: { url: imageData } }
         ]
       }],
       max_tokens: 250
@@ -222,4 +241,37 @@ async function searchMessages({ conversationId, query = "", from = null, to = nu
   }
 
   return filtered.filter(m => searchableText(m).toLowerCase().includes(q));
+}
+
+async function analyzeGroup(messages) {
+  const cfg = await settings();
+  if (!cfg.openAiKey) throw new Error("Group analysis requires an OpenAI key in Settings.");
+
+  const compact = messages.slice(0, 250).map(m => ({
+    at: m.timestamp ? new Date(m.timestamp).toISOString() : null,
+    sender: m.sender || null,
+    text: searchableText(m).slice(0, 1200)
+  })).filter(x => x.text);
+
+  const res = await fetch("https://api.openai.com/v1/chat/completions", {
+    method: "POST",
+    headers: {
+      "Authorization": "Bearer " + cfg.openAiKey,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      model: "gpt-4o-mini",
+      messages: [{
+        role: "system",
+        content: "Summarize Messenger conversation history for retrieval, not judgment. Return concise sections: Topics, Decisions/requests, People/products/places, and Useful search terms. Do not invent facts."
+      }, {
+        role: "user",
+        content: JSON.stringify(compact)
+      }],
+      max_tokens: 700
+    })
+  });
+  if (!res.ok) throw new Error("OpenAI group analysis: " + res.status);
+  const data = await res.json();
+  return data.choices?.[0]?.message?.content || "";
 }
