@@ -67,7 +67,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           VERSION: ${{ steps.version.outputs.version }}
         run: |
-          gh release create "v$VERSION"             "messenger-better-search-v$VERSION.zip"             --target "$GITHUB_SHA"             --title "Messenger Better Search v$VERSION"             --notes "First packaged release of Messenger Better Search.
+          gh release create "v$VERSION"             "messenger-better-search-v$VERSION.zip"             --target "$GITHUB_SHA"             --title "Messenger Better Search v$VERSION"             --notes "Packaged release of Messenger Better Search.
 
           Download the ZIP, unpack it, then open chrome://extensions, enable Developer mode and choose Load unpacked.
 

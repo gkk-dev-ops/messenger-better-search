@@ -1,9 +1,13 @@
 {
   "manifest_version": 3,
   "name": "Messenger Better Search",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Local-first Messenger archive, search and optional AI enrichment.",
-  "permissions": ["storage", "unlimitedStorage", "tabs"],
+  "permissions": [
+    "storage",
+    "unlimitedStorage",
+    "tabs"
+  ],
   "host_permissions": [
     "https://www.messenger.com/*",
     "https://www.facebook.com/messages/*"
@@ -14,20 +18,41 @@
     "https://*.fbcdn.net/*",
     "https://*.fbsbx.com/*"
   ],
-  "background": { "service_worker": "src/background.js", "type": "module" },
-  "action": { "default_popup": "src/popup.html", "default_title": "Messenger Better Search" },
+  "background": {
+    "service_worker": "src/background.js",
+    "type": "module"
+  },
+  "action": {
+    "default_popup": "src/popup.html",
+    "default_title": "Messenger Better Search",
+    "default_icon": "src/icons/icon128.png"
+  },
   "options_page": "src/options.html",
   "content_scripts": [
     {
-      "matches": ["https://www.messenger.com/*", "https://www.facebook.com/messages/*"],
-      "js": ["src/date-utils.js", "src/content.js"],
+      "matches": [
+        "https://www.messenger.com/*",
+        "https://www.facebook.com/messages/*"
+      ],
+      "js": [
+        "src/date-utils.js",
+        "src/content.js"
+      ],
       "run_at": "document_idle"
     }
   ],
   "web_accessible_resources": [
     {
-      "resources": ["src/search.html", "src/styles.css"],
-      "matches": ["<all_urls>"]
+      "resources": [
+        "src/search.html",
+        "src/styles.css"
+      ],
+      "matches": [
+        "<all_urls>"
+      ]
     }
-  ]
+  ],
+  "icons": {
+    "128": "src/icons/icon128.png"
+  }
 }
