@@ -1,4 +1,3 @@
-import { Unzip, UnzipInflate, UnzipPassThrough } from "fflate";
 import {
   getFingerprintCounts,
   putImport,
@@ -7,13 +6,11 @@ import {
 } from "./db.js";
 import {
   deduplicateImportedMessages,
-  isMetaMessageHtmlPath,
-  isMetaMessageJsonPath,
   normalizeMetaConversation
 } from "./meta-parser.js";
+import { readMetaZip } from "./meta-zip.js";
 
 const $ = id => document.getElementById(id);
-const decoder = new TextDecoder("utf-8");
 const countsCache = new Map();
 const seenThisImportCache = new Map();
 
@@ -41,93 +38,6 @@ function renderProgress(patch = {}) {
   $("progressBar").style.width = state.files
     ? `${Math.min(100, state.fileIndex / state.files * 100)}%`
     : "0%";
-}
-
-/**
- * Collects only Messenger JSON entries from a ZIP without inflating media files.
- * @param {File} file
- * @returns {Promise<{entries:Array<{name:string,text:string}>,sawHtml:boolean}>}
- */
-async function readMetaZip(file) {
-  return new Promise(async (resolve, reject) => {
-    const entries = [];
-    let sawHtml = false;
-    let pending = 0;
-    let inputFinished = false;
-    let settled = false;
-
-    const finishIfReady = () => {
-      if (!settled && inputFinished && pending === 0) {
-        settled = true;
-        resolve({ entries, sawHtml });
-      }
-    };
-
-    const unzip = new Unzip(entry => {
-      if (isMetaMessageHtmlPath(entry.name)) {
-        sawHtml = true;
-        return;
-      }
-
-      if (!isMetaMessageJsonPath(entry.name)) return;
-
-      pending += 1;
-      const chunks = [];
-      let length = 0;
-
-      entry.ondata = (error, chunk, final) => {
-        if (settled) return;
-        if (error) {
-          settled = true;
-          reject(error);
-          return;
-        }
-
-        chunks.push(chunk);
-        length += chunk.length;
-
-        if (final) {
-          const joined = new Uint8Array(length);
-          let offset = 0;
-          for (const part of chunks) {
-            joined.set(part, offset);
-            offset += part.length;
-          }
-
-          entries.push({
-            name: entry.name,
-            text: decoder.decode(joined)
-          });
-          pending -= 1;
-          finishIfReady();
-        }
-      };
-
-      entry.start();
-    });
-
-    unzip.register(UnzipInflate);
-    unzip.register(UnzipPassThrough);
-
-    try {
-      const reader = file.stream().getReader();
-      while (true) {
-        const { value, done } = await reader.read();
-        if (done) {
-          unzip.push(new Uint8Array(), true);
-          inputFinished = true;
-          finishIfReady();
-          break;
-        }
-        unzip.push(value, false);
-      }
-    } catch (error) {
-      if (!settled) {
-        settled = true;
-        reject(error);
-      }
-    }
-  });
 }
 
 /**
