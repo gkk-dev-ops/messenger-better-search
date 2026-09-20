@@ -1,112 +1,170 @@
 # Messenger Better Search
 
-> **Czy też masz problem z szukaniem w konwersacjach w Messengerze?**
+> **Czy też masz problem z odnalezieniem czegoś w starej konwersacji na Messengerze?**
 
-Pamiętasz, że ktoś coś Ci napisał, ale nie możesz już znaleźć gdzie? Messenger Better Search jest open-source'owym rozszerzeniem, które pozwala odzyskać kontrolę nad własną historią rozmów: zebrać ją lokalnie, pogrupować, przeszukiwać i — opcjonalnie, z własnym kluczem API — wzbogacić o transkrypcje, opisy obrazów i wyszukiwanie semantyczne.
+Pamiętasz, że ktoś coś Ci wysłał albo o czymś rozmawialiście, ale natywne wyszukiwanie Messengera nie pomaga? Messenger Better Search tworzy lokalny, przeszukiwalny indeks historii rozmów z **oficjalnego eksportu Meta**.
 
-**Twoje dane domyślnie zostają u Ciebie. Bring your own key.**
+Nie logujemy się do Messengera za Ciebie, nie przewijamy automatycznie rozmów i nie importujemy wiadomości z DOM. Źródłem historii jest plik, który użytkownik sam pobiera przez **Meta Export Your Information**.
+
+**Local-first. Open source. Bring your own key for optional AI.**
+
+Messenger Better Search powstaje jako open-source project by [GKD](https://gkd.agency).
 
 ## Download
 
-Gotowe paczki rozszerzenia są publikowane w [GitHub Releases](https://github.com/gkk-dev-ops/messenger-better-search/releases/latest). Pobierz ZIP z najnowszego release, rozpakuj go i załaduj katalog przez `chrome://extensions` → **Load unpacked**.
+Gotowe paczki rozszerzenia są publikowane w [GitHub Releases](https://github.com/gkk-dev-ops/messenger-better-search/releases/latest).
 
-Messenger Better Search powstaje jako open-source project by GKD.
+1. Pobierz ZIP najnowszej wersji.
+2. Rozpakuj go.
+3. Otwórz `chrome://extensions`.
+4. Włącz **Developer mode**.
+5. Kliknij **Load unpacked** i wskaż rozpakowany katalog.
 
-## Co robi
+## Jak to działa
 
-- zbiera tekst z otwartej rozmowy Messenger,
-- przewija historię wstecz do wybranej daty,
-- pokazuje **aktualnie osiągniętą datę** i cel,
-- zapisuje checkpointy oraz powód zatrzymania,
-- pozwala wznowić capture po błędzie/reloadzie,
-- przechowuje dane w IndexedDB rozszerzenia,
-- wyszukuje po tekście lokalnie,
-- grupuje wyniki po dniach, tygodniach, miesiącach i latach,
-- opcjonalnie transkrybuje głosówki przez ElevenLabs Scribe,
-- opcjonalnie opisuje zdjęcia + widoczny tekst przez model vision,
-- opcjonalnie tworzy embeddings i semantic search,
-- opcjonalnie streszcza wybrany dzień/tydzień/miesiąc/rok.
+### 1. Eksportujesz historię przez Meta
+
+W Meta Accounts Center wybierasz **Export Your Information**, zaznaczasz **Messages**, format **JSON** i eksport do urządzenia.
+
+Możesz zrobić:
+
+- pełny eksport historii przy pierwszym imporcie,
+- później mniejsze eksporty tylko za kolejny okres.
+
+### 2. Importujesz ZIP lub JSON do Better Search
+
+Rozszerzenie:
+
+- odczytuje oficjalne pliki `message_*.json`,
+- rozpoznaje rozmowy i uczestników,
+- normalizuje wiadomości, reakcje, połączenia i załączniki,
+- deduplikuje kolejne importy,
+- zapisuje indeks lokalnie w IndexedDB,
+- nie wymaga wysyłania archiwum do backendu GKD.
+
+Możesz importować kilka części eksportu jednocześnie.
+
+### 3. Przeszukujesz lokalne archiwum
+
+Możesz:
+
+- wyszukiwać tekst,
+- filtrować po rozmowie i dacie,
+- przeszukiwać wszystkie rozmowy naraz,
+- grupować wyniki po dniach, tygodniach, miesiącach i latach,
+- wejść w szerszy kontekst znalezionej wiadomości.
+
+### 4. Opcjonalny bridge w Messengerze
+
+Gdy korzystasz z natywnego **Search in conversation**, extension może dodać przycisk:
+
+> **Open in Better Search**
+
+Przycisk przekazuje wyłącznie wpisane przez Ciebie query do lokalnego Better Search.
+
+Bridge:
+
+- nie czyta wyników wyszukiwania Messengera,
+- nie importuje wiadomości z DOM,
+- nie przechwytuje historii rozmowy,
+- nie pobiera mediów z CDN Messengera.
 
 ## Dlaczego
 
-Z filmów, wiadomości, zdjęć i głosówek rozproszonych w Messengerze tworzymy prywatne, możliwe do przeszukania archiwum w Twojej przeglądarce. Zamiast pamiętać dokładne słowa możesz później szukać kontekstu:
+Zamiast pamiętać dokładne słowa możesz później szukać kontekstu, np.:
 
 - „ten soft flask, do którego miałem wydrukować stojak”,
 - „kod SMS, który dostałem w maju”,
 - „kiedy rozmawialiśmy o locie do Włoch?”,
-- „co ustaliliśmy w tym tygodniu?”.
+- „co ustaliliśmy w tamtym tygodniu?”.
 
-## Background capture — co jest możliwe
+## Importy przyrostowe
 
-Capture nie zależy od popupu rozszerzenia. Silnik działa jako **content script w karcie Messengera**, a zapis i stan sesji obsługuje service worker rozszerzenia.
+Po pierwszym pełnym imporcie nie musisz za każdym razem eksportować całej historii.
 
-To oznacza, że możesz przełączyć się na inną kartę i capture może dalej przewijać Messenger oraz zapisywać kolejne partie danych.
+Przykładowo:
 
-Istnieje ważne ograniczenie platformy: Chrome może ograniczyć działanie ukrytej karty albo całkowicie ją **discardować/reloadować**, szczególnie przy presji pamięci. Service worker ani offscreen document nie mają dostępu do DOM Messengera, więc nie możemy kontynuować scrollowania po usunięciu dokumentu strony.
-
-Dlatego Messenger Better Search zapisuje:
-
-- ostatnią osiągniętą datę,
-- target date,
-- status,
-- powód przerwania,
-- timestamp checkpointu.
-
-Po ponownym otwarciu karty użyj **Resume from checkpoint**.
-
-## Instalacja lokalna
-
-```bash
-git clone https://github.com/gkk-dev-ops/messenger-better-search.git
-cd messenger-better-search
-npm run build
+```text
+pełny eksport do 1 września
++
+eksport 1–30 września
+=
+zaktualizowane lokalne archiwum
 ```
 
-1. Otwórz `chrome://extensions`.
-2. Włącz Developer mode.
-3. Kliknij **Load unpacked**.
-4. Wskaż katalog `dist/`.
-5. Otwórz rozmowę w Messengerze.
-6. Ustaw datę i uruchom capture.
+Messenger Better Search rozpoznaje wiadomości, które już istnieją, i pomija duplikaty.
 
 ## AI / BYOK
 
-Wszystkie funkcje AI są opcjonalne.
+Podstawowy import i wyszukiwanie nie wymagają AI ani klucza API.
 
-| Funkcja | Provider w MVP | Bez klucza |
+Opcjonalne rozszerzenia:
+
+| Funkcja | Provider | Bez klucza |
 | --- | --- | --- |
 | Text search | lokalnie | ✅ |
-| Grupowanie czasu | lokalnie | ✅ |
-| Voice transcription | ElevenLabs Scribe v2 | ❌ |
-| Image/OCR context | OpenAI vision | ❌ |
-| Semantic search | OpenAI embeddings | ❌ |
-| Group analysis | OpenAI text model | ❌ |
+| Filtrowanie i grupowanie czasu | lokalnie | ✅ |
+| Import / deduplikacja | lokalnie | ✅ |
+| Voice transcription | ElevenLabs Scribe | ❌ |
+| Image/OCR context | model vision | ❌ |
+| Semantic search | embeddings | ❌ |
+| Group analysis | model tekstowy | ❌ |
 
-Klucze są przechowywane w `chrome.storage.local` Twojego profilu przeglądarki. Nie są wysyłane do GKD ani do żadnego backendu tego projektu.
+Klucze są przechowywane w `chrome.storage.local` profilu przeglądarki. Nie są wysyłane do GKD.
 
-> Nie traktuj lokalnego storage jako sejfu na sekrety o wysokiej wartości. Docelowo dodamy możliwość sesyjnego klucza oraz providerów lokalnych.
+> Browser extension storage nie powinien być traktowany jak sejf na sekrety wysokiej wartości. Docelowo chcemy wspierać również klucze sesyjne i lokalne modele.
 
 ## Prywatność
 
-Projekt nie ma własnego serwera do przechowywania historii rozmów. Capture trafia do lokalnego IndexedDB. Dane opuszczają komputer tylko wtedy, gdy świadomie włączysz konkretną funkcję AI i podasz własny klucz dostawcy.
+Projekt nie ma backendu GKD zbierającego historię rozmów.
+
+Standardowy flow:
+
+```text
+Meta Export ZIP / JSON
+        ↓
+Messenger Better Search
+        ↓
+IndexedDB w Twojej przeglądarce
+        ↓
+lokalne wyszukiwanie
+```
+
+Dane opuszczają urządzenie tylko wtedy, gdy użytkownik świadomie włączy konkretną integrację AI wymagającą zewnętrznego providera.
 
 Zobacz [Privacy & threat model](docs/privacy.md).
 
 ## Development
 
 ```bash
+git clone https://github.com/gkk-dev-ops/messenger-better-search.git
+cd messenger-better-search
+npm install
 npm test
 npm run build
-npm run package
+npm run test:e2e
 ```
+
+Playwright testuje m.in.:
+
+- import oficjalnego Meta ZIP,
+- ponowny import i deduplikację,
+- wyszukiwanie zaimportowanej wiadomości,
+- odrzucenie eksportu HTML,
+- wstrzyknięcie przycisku **Open in Better Search** do fixture natywnego search UI Messengera,
+- przekazanie wyłącznie query do lokalnego Better Search.
 
 ## CI / release
 
-GitHub Actions testuje parsery, buduje unpacked extension, publikuje ZIP jako artifact, publikuje GitHub Pages i posiada jawny **mock** kroku Chrome Web Store. Publikacja do Chrome Web Store pozostaje mockiem do czasu dodania danych aplikacji/sekretów ze Store.
+GitHub Actions uruchamia unit/integration tests, buduje extension, wykonuje Playwright E2E, tworzy ZIP oraz publikuje artefakty. Pipeline release jest blokowany, jeśli testy lub E2E nie przejdą.
+
+Publikacja do Chrome Web Store pozostaje obecnie mockiem do czasu skonfigurowania danych aplikacji i sekretów Store.
 
 ## Status
 
-To wczesny build. DOM Messengera nie jest publicznym, stabilnym API i może się zmieniać. Jeśli Meta zmieni strukturę DOM lub sposób ładowania mediów, selektory/extractory będą wymagały aktualizacji.
+To wczesna wersja produktu. Format eksportów Meta może ewoluować, dlatego parser jest testowany niezależnie i toleruje różne ścieżki/fragmenty archiwum.
+
+Integracja z UI Messengera jest celowo minimalna: wykrywa wyłącznie pole **Search in conversation** i dodaje shortcut do Better Search. Jeśli Meta zmieni ten fragment UI, bridge może wymagać aktualizacji, ale import oficjalnego archiwum i lokalny search pozostają niezależne.
 
 ## License
 
