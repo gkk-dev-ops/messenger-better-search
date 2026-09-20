@@ -3,8 +3,7 @@ const fields = [
   "elevenLabsKey",
   "enableVision",
   "enableEmbeddings",
-  "openAiKey",
-  "autoEnrich"
+  "openAiKey"
 ];
 
 const PROVIDER_ORIGINS = {
