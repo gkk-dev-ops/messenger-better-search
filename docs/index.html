@@ -11,31 +11,31 @@
 </head>
 <body>
 <div class="wrap">
-<nav class="nav"><div class="brand">Messenger <b>Memory</b></div><a href="https://github.com/gkk-dev-ops/messenger-better-search">GitHub ↗</a></nav>
+<nav class="nav"><div class="brand">Messenger <b>Better Search</b></div><a href="https://github.com/gkk-dev-ops/messenger-better-search">GitHub ↗</a></nav>
 <header class="hero">
 <div class="eyebrow">Open-source by <a href="https://gkd.agency" target="_blank" rel="noopener noreferrer">GKD</a> · Local-first</div>
 <h1>Pamiętasz rozmowę. Nie pamiętasz, gdzie jej szukać.</h1>
-<p>Messenger Better Search zbiera Twoją historię rozmów do lokalnego archiwum, grupuje ją po czasie i pozwala przeszukiwać tekst, transkrypcje głosówek oraz kontekst zdjęć. AI jest opcjonalne — przynosisz własny klucz.</p>
+<p>Messenger Better Search importuje oficjalny eksport historii z Meta do lokalnego archiwum i pozwala przeszukiwać go dużo wygodniej niż natywny Messenger. Bez automatycznego przewijania rozmów, bez pobierania wiadomości z DOM i bez backendu GKD. AI jest opcjonalne — przynosisz własny klucz.</p>
 <a class="cta" href="https://github.com/gkk-dev-ops/messenger-better-search/releases/latest">Pobierz najnowszą wersję</a>
 <a style="margin-left:12px" href="https://github.com/gkk-dev-ops/messenger-better-search">Kod na GitHubie ↗</a>
 </header>
 
 <section class="section">
-<div class="eyebrow">Capture</div>
-<h2>Wiesz, gdzie jesteś i dokąd przewijasz.</h2>
-<p style="color:var(--m);max-width:720px">Ustawiasz np. 1 stycznia. Podczas przewijania widzisz aktualnie osiągniętą datę, progress i checkpoint. Jeśli Messenger przestanie ładować historię lub Chrome przeładuje kartę, zobaczysz powód i opcję wznowienia.</p>
-<img class="shot" src="screenshots/capture-progress.svg" alt="Capture progress screenshot with current date and target date">
+<div class="eyebrow">Import</div>
+<h2>Oficjalny eksport Meta jest źródłem historii.</h2>
+<p style="color:var(--m);max-width:760px">W Meta Accounts Center wybierasz <strong>Export Your Information → Messages → JSON</strong>, pobierasz ZIP i przeciągasz go do Better Search. Pierwszy import może objąć całą historię, a kolejne tylko nowy okres — rozszerzenie deduplikuje wiadomości i aktualizuje lokalny indeks.</p>
+<img class="shot" src="screenshots/import-progress.svg" alt="Meta archive import progress in Messenger Better Search">
 </section>
 
 <section class="grid section">
 <div class="card">
-<h2>Przeszukuj kontekst</h2>
-<p>Grupuj po dniu, tygodniu, miesiącu lub roku. Szukaj zwykłym tekstem albo — opcjonalnie — semantycznie.</p>
+<h2>Przeszukuj całą historię</h2>
+<p>Szukaj po wszystkich zaimportowanych rozmowach, filtruj po dacie i grupuj wyniki po dniu, tygodniu, miesiącu lub roku. Opcjonalnie możesz dodać semantic search.</p>
 <img class="shot" src="screenshots/search-timeline.svg" alt="Search timeline screenshot">
 </div>
 <div class="card">
-<h2>Głosówki i zdjęcia</h2>
-<p>Transkrypcja audio, OCR-like tekst oraz krótki opis tego, co znajduje się na zdjęciu, trafiają do tego samego indeksu.</p>
+<h2>Messenger bridge + opcjonalne AI</h2>
+<p>Przy natywnym <strong>Search in conversation</strong> możemy dodać skrót <strong>Open in Better Search</strong>, który przekazuje tylko wpisane query do lokalnego archiwum. Transkrypcja audio, OCR i embeddings pozostają opcjonalne.</p>
 <img class="shot" src="screenshots/ai-enrichment.svg" alt="AI enrichment settings screenshot">
 </div>
 </section>
@@ -43,7 +43,7 @@
 <section class="section card">
 <div class="eyebrow">Privacy</div>
 <h2>Open source nie oznacza „wyślij wszystko do nas”.</h2>
-<p>Podstawowy capture i wyszukiwanie są lokalne. Nie mamy backendu zbierającego Twoją historię. Funkcje AI włączasz sam i podajesz własny klucz dostawcy. Dzięki temu możesz odzyskać kontrolę nad danymi, które i tak już istnieją w Twoim koncie Messenger.</p>
+<p>Import i podstawowe wyszukiwanie są lokalne. Nie mamy backendu zbierającego Twoją historię ani pliki eksportu. Dane opuszczają urządzenie tylko wtedy, gdy świadomie włączysz funkcję AI i podasz własny klucz dostawcy.</p>
 </section>
 
 <footer class="footer">Messenger Better Search · open-source project by <a href="https://gkd.agency" target="_blank" rel="noopener noreferrer">GKD</a> · MIT</footer>
