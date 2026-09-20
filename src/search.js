@@ -145,9 +145,12 @@ async function loadConversations() {
   }
 
   conversations = response.conversations || [];
-  $("conversation").innerHTML = conversations.map(conversation =>
-    `<option value="${escapeHtml(conversation.id)}">${escapeHtml(conversation.title || conversation.id)} · ${(conversation.messageCount || 0).toLocaleString()} messages</option>`
-  ).join("");
+  $("conversation").innerHTML = [
+    '<option value="*">All conversations</option>',
+    ...conversations.map(conversation =>
+      `<option value="${escapeHtml(conversation.id)}">${escapeHtml(conversation.title || conversation.id)} · ${(conversation.messageCount || 0).toLocaleString()} messages</option>`
+    )
+  ].join("");
 
   if (!conversations.length) {
     $("timeline").innerHTML =
@@ -204,6 +207,12 @@ async function run() {
  */
 function render(messages) {
   $("count").textContent = `${messages.length} messages`;
+  const conversationNames = new Map(
+    conversations.map(conversation => [
+      conversation.id,
+      conversation.title || conversation.id
+    ])
+  );
   const mode = $("groupBy").value;
   const groups = new Map();
 
@@ -229,7 +238,7 @@ function render(messages) {
         </div>
         ${group.messages.map(message => `
           <article class="message">
-            <div class="meta">${escapeHtml(message.sender || "Unknown sender")} · ${message.timestamp ? new Date(message.timestamp).toLocaleString() : "unknown time"}${typeof message.score === "number" ? " · similarity " + message.score.toFixed(3) : ""}</div>
+            <div class="meta">${escapeHtml(conversationNames.get(message.conversationId) || "Unknown conversation")} · ${escapeHtml(message.sender || "Unknown sender")} · ${message.timestamp ? new Date(message.timestamp).toLocaleString() : "unknown time"}${typeof message.score === "number" ? " · similarity " + message.score.toFixed(3) : ""}</div>
             ${messageBody(message)}
           </article>
         `).join("")}
@@ -306,8 +315,11 @@ $("export").addEventListener("click", async () => {
 });
 
 try {
+  const initialQuery = new URL(location.href).searchParams.get("q");
+  if (initialQuery) $("query").value = initialQuery;
+
   await loadConversations();
-  await run();
+  if (initialQuery || conversations.length) await run();
 } catch (error) {
   $("timeline").innerHTML =
     `<div class="card status-reason">${escapeHtml(String(error?.message || error))}</div>`;
