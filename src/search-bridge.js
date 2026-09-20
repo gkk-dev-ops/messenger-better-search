@@ -129,9 +129,10 @@ function syncBridge() {
 
     button.addEventListener("click", () => {
       const query = readQuery(control);
-      const url = new URL(chrome.runtime.getURL("src/search.html"));
-      if (query) url.searchParams.set("q", query);
-      window.open(url.toString(), "_blank", "noopener");
+      chrome.runtime.sendMessage({
+        type: "OPEN_BETTER_SEARCH",
+        query
+      });
     });
 
     mount.append(button);
