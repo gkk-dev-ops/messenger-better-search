@@ -6,7 +6,7 @@ const OPENAI_ORIGIN = "https://api.openai.com/*";
 let conversations = [];
 
 /**
- * Escapes untrusted captured text before inserting it into archive HTML.
+ * Escapes untrusted imported text before inserting it into archive HTML.
  * @param {string} value
  * @returns {string}
  */
@@ -109,13 +109,13 @@ function messageBody(message) {
 
   if (message.media?.images?.length && !message.imageContext?.length) {
     parts.push(
-      `<div class="media-note">${message.media.images.length} image(s) captured — enable image understanding to make them searchable.</div>`
+      `<div class="media-note">${message.media.images.length} image(s) imported — enable image understanding to make them searchable.</div>`
     );
   }
 
   if (message.media?.audio?.length && !message.transcript) {
     parts.push(
-      '<div class="media-note">Voice message captured — enable transcription to search its content.</div>'
+      '<div class="media-note">Voice message imported — enable transcription to search its content.</div>'
     );
   }
 
