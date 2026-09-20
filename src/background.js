@@ -1,4 +1,5 @@
 import {
+  getAllMessages,
   getArchiveStats,
   getEmbeddings,
   getMessages,
@@ -78,6 +79,14 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
           updatedAt: Date.now()
         });
       }
+      sendResponse({ ok: true });
+      return;
+    }
+
+    if (message.type === "OPEN_BETTER_SEARCH") {
+      const url = new URL(chrome.runtime.getURL("src/search.html"));
+      if (message.query) url.searchParams.set("q", String(message.query));
+      await chrome.tabs.create({ url: url.toString() });
       sendResponse({ ok: true });
       return;
     }
@@ -525,7 +534,9 @@ async function searchMessages({
   to = null,
   semantic = false
 }) {
-  const messages = await getMessages(conversationId);
+  const messages = conversationId && conversationId !== "*"
+    ? await getMessages(conversationId)
+    : await getAllMessages();
   const hasDateBoundary = Boolean(from || to);
 
   const filtered = messages.filter(message => {
