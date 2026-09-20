@@ -2,7 +2,7 @@
 
 > **Czy też masz problem z odnalezieniem czegoś w starej konwersacji na Messengerze?**
 
-Pamiętasz, że ktoś coś Ci wysłał albo o czymś rozmawialiście, ale natywne wyszukiwanie Messengera nie pomaga? Messenger Better Search tworzy lokalny, przeszukiwalny indeks historii rozmów z **oficjalnego eksportu Meta**.
+Pamiętasz, że ktoś coś Ci wysłał albo o czymś rozmawialiście, ale natywne wyszukiwanie Messengera nie pomaga? Messenger Better Search tworzy lokalny, przeszukiwalny indeks historii rozmów z **eksportu Meta**.
 
 Nie logujemy się do Messengera za Ciebie, nie przewijamy automatycznie rozmów i nie importujemy wiadomości z DOM. Źródłem historii jest plik, który użytkownik sam pobiera przez **Meta Export Your Information**.
 
@@ -35,12 +35,12 @@ Możesz zrobić:
 
 Rozszerzenie:
 
-- odczytuje oficjalne pliki `message_*.json`,
+- odczytuje pliki `message_*.json`,
 - rozpoznaje rozmowy i uczestników,
 - normalizuje wiadomości, reakcje, połączenia i załączniki,
 - deduplikuje kolejne importy,
 - zapisuje indeks lokalnie w IndexedDB,
-- nie wymaga wysyłania archiwum do backendu GKD.
+- nie wymaga wysyłania archiwum do żadnego backendu.
 
 Możesz importować kilka części eksportu jednocześnie.
 
@@ -110,13 +110,13 @@ Opcjonalne rozszerzenia:
 | Semantic search | embeddings | ❌ |
 | Group analysis | model tekstowy | ❌ |
 
-Klucze są przechowywane w `chrome.storage.local` profilu przeglądarki. Nie są wysyłane do GKD.
+Klucze są przechowywane w `chrome.storage.local` profilu przeglądarki. Nie są wysyłane do żadnego backendu projektu.
 
 > Browser extension storage nie powinien być traktowany jak sejf na sekrety wysokiej wartości. Docelowo chcemy wspierać również klucze sesyjne i lokalne modele.
 
 ## Prywatność
 
-Projekt nie ma backendu GKD zbierającego historię rozmów.
+Projekt nie ma backendu zbierającego historię rozmów.
 
 Standardowy flow:
 
@@ -147,7 +147,7 @@ npm run test:e2e
 
 Playwright testuje m.in.:
 
-- import oficjalnego Meta ZIP,
+- import Meta ZIP,
 - ponowny import i deduplikację,
 - wyszukiwanie zaimportowanej wiadomości,
 - odrzucenie eksportu HTML,
@@ -164,7 +164,7 @@ Publikacja do Chrome Web Store pozostaje obecnie mockiem do czasu skonfigurowani
 
 To wczesna wersja produktu. Format eksportów Meta może ewoluować, dlatego parser jest testowany niezależnie i toleruje różne ścieżki/fragmenty archiwum.
 
-Integracja z UI Messengera jest celowo minimalna: wykrywa wyłącznie pole **Search in conversation** i dodaje shortcut do Better Search. Jeśli Meta zmieni ten fragment UI, bridge może wymagać aktualizacji, ale import oficjalnego archiwum i lokalny search pozostają niezależne.
+Integracja z UI Messengera jest celowo minimalna: wykrywa wyłącznie pole **Search in conversation** i dodaje shortcut do Better Search. Jeśli Meta zmieni ten fragment UI, bridge może wymagać aktualizacji, ale import archiwum i lokalny search pozostają niezależne.
 
 ## License
 
