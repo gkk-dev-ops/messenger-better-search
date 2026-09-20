@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720">
 <rect width="1200" height="720" fill="#0b0d0f"/>
 <text x="110" y="90" font-family="Arial" font-size="38" font-weight="800" fill="#f5f7f8">Local by default. AI only when you ask.</text>
-<text x="110" y="125" font-family="Arial" font-size="17" fill="#98a2ad">Bring your own keys · no GKD data backend</text>
+<text x="110" y="125" font-family="Arial" font-size="17" fill="#98a2ad">Bring your own keys · no data backend</text>
 <rect x="110" y="175" width="980" height="150" rx="18" fill="#12161a" stroke="#27313a"/>
 <text x="140" y="215" font-family="Arial" font-size="21" font-weight="700" fill="#f5f7f8">Voice transcription</text>
 <text x="140" y="242" font-family="Arial" font-size="15" fill="#98a2ad">ElevenLabs Scribe v2</text>
