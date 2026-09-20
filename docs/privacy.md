@@ -26,7 +26,7 @@ It does **not**:
 - import conversation messages from the page DOM,
 - automatically scroll conversations,
 - capture Messenger media,
-- send Messenger conversation content to GKD.
+- send Messenger conversation content to any project backend.
 
 ## External processing
 
@@ -39,9 +39,9 @@ Current optional providers include:
 
 When a feature uses an external provider, the relevant content is sent to that provider and their privacy/retention policies apply.
 
-## No GKD data backend
+## No backend
 
-The project currently has no GKD-hosted backend receiving conversation history, Meta export archives or API keys from the extension.
+The project currently has no backend receiving conversation history, Meta export archives or API keys from the extension.
 
 ## Local security limitations
 
@@ -51,6 +51,6 @@ Future versions may offer encrypted archives, ephemeral API keys and local-model
 
 ## Meta compatibility
 
-The official Meta export format and Messenger UI can change over time.
+The Meta export format and Messenger UI can change over time.
 
 Changes to Meta export JSON may require parser updates. Changes to Messenger UI may temporarily affect only the optional search shortcut; they do not prevent previously imported archives from being searched locally.
