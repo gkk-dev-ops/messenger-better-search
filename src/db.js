@@ -297,7 +297,7 @@ export async function getSession(conversationId) {
 }
 
 /**
- * Lists legacy capture sessions.
+ * Lists legacy session records retained for backwards compatibility.
  * @returns {Promise<object[]>}
  */
 export async function listSessions() {
