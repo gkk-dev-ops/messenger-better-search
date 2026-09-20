@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720">
+<rect width="1200" height="720" fill="#0b0d0f"/>
+<rect x="150" y="70" width="900" height="580" rx="30" fill="#12161a" stroke="#27313a"/>
+<rect x="205" y="115" width="48" height="48" rx="12" fill="#168aff"/>
+<circle cx="238" cy="148" r="16" fill="none" stroke="#fff" stroke-width="5"/>
+<line x1="249" y1="159" x2="264" y2="174" stroke="#fff" stroke-width="5" stroke-linecap="round"/>
+<text x="275" y="136" font-family="Arial" font-weight="700" font-size="26" fill="#f5f7f8">Messenger Better Search</text>
+<text x="275" y="159" font-family="Arial" font-size="15" fill="#98a2ad">Official Meta export importer</text>
+
+<text x="205" y="225" font-family="Arial" font-size="14" fill="#98a2ad">IMPORT STATUS</text>
+<text x="205" y="257" font-family="Arial" font-weight="700" font-size="24" fill="#f5f7f8">Indexing Messenger history…</text>
+<rect x="205" y="285" width="790" height="12" rx="6" fill="#090b0d" stroke="#27313a"/>
+<rect x="205" y="285" width="545" height="12" rx="6" fill="#168aff"/>
+
+<rect x="205" y="335" width="180" height="100" rx="14" fill="#0d1114" stroke="#27313a"/>
+<text x="225" y="364" font-family="Arial" font-size="13" fill="#98a2ad">CONVERSATIONS</text>
+<text x="225" y="405" font-family="Arial" font-size="30" font-weight="700" fill="#f5f7f8">83</text>
+
+<rect x="405" y="335" width="180" height="100" rx="14" fill="#0d1114" stroke="#27313a"/>
+<text x="425" y="364" font-family="Arial" font-size="13" fill="#98a2ad">MESSAGES ADDED</text>
+<text x="425" y="405" font-family="Arial" font-size="30" font-weight="700" fill="#f5f7f8">124,842</text>
+
+<rect x="605" y="335" width="180" height="100" rx="14" fill="#0d1114" stroke="#27313a"/>
+<text x="625" y="364" font-family="Arial" font-size="13" fill="#98a2ad">DUPLICATES</text>
+<text x="625" y="405" font-family="Arial" font-size="30" font-weight="700" fill="#f5f7f8">14,221</text>
+
+<rect x="805" y="335" width="190" height="100" rx="14" fill="#0d1114" stroke="#27313a"/>
+<text x="825" y="364" font-family="Arial" font-size="13" fill="#98a2ad">JSON CHUNKS</text>
+<text x="825" y="405" font-family="Arial" font-size="30" font-weight="700" fill="#f5f7f8">426</text>
+
+<text x="205" y="490" font-family="Arial" font-size="14" fill="#98a2ad">Currently indexing</text>
+<text x="205" y="518" font-family="Arial" font-size="16" fill="#cbd4da">messages/inbox/pawel_123/message_17.json</text>
+
+<rect x="205" y="555" width="260" height="52" rx="13" fill="#168aff"/>
+<text x="335" y="588" text-anchor="middle" font-family="Arial" font-size="17" font-weight="700" fill="#fff">Search archive</text>
+<rect x="485" y="555" width="260" height="52" rx="13" fill="#1c2329" stroke="#27313a"/>
+<text x="615" y="588" text-anchor="middle" font-family="Arial" font-size="17" font-weight="700" fill="#f5f7f8">Import newer history</text>
+<text x="205" y="630" font-family="Arial" font-size="14" fill="#98a2ad">Parsed locally from Meta Export Your Information · JSON · no Messenger DOM scraping</text>
+</svg>
