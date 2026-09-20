@@ -3,12 +3,9 @@ import {
   getArchiveStats,
   getEmbeddings,
   getMessages,
-  getSession,
   listConversations,
-  listSessions,
   putEmbedding,
   putMessages,
-  putSession
 } from "./db.js";
 
 const DEFAULT_SETTINGS = {
@@ -16,8 +13,7 @@ const DEFAULT_SETTINGS = {
   openAiKey: "",
   enableTranscription: false,
   enableVision: false,
-  enableEmbeddings: false,
-  autoEnrich: false
+  enableEmbeddings: false
 };
 
 const PROVIDER_ORIGINS = {
@@ -52,37 +48,6 @@ chrome.runtime.onInstalled.addListener(async () => {
 
 chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
   (async () => {
-    if (message.type === "STORE_MESSAGES") {
-      const messages = message.messages || [];
-      await putMessages(messages);
-      const cfg = await settings();
-      const enrichment = cfg.autoEnrich ? await enrichBatch(messages) : null;
-      sendResponse({ ok: true, count: messages.length, enrichment });
-      return;
-    }
-
-    if (message.type === "SESSION_PROGRESS") {
-      const previous = await getSession(message.session.conversationId);
-      await putSession({ ...previous, ...message.session });
-      sendResponse({ ok: true });
-      return;
-    }
-
-    if (message.type === "CONTENT_READY") {
-      const previous = await getSession(message.conversationId);
-      if (previous?.status === "running") {
-        await putSession({
-          ...previous,
-          status: "paused",
-          reason: "TAB_RELOADED",
-          detail: "Messenger tab reloaded. Capture can be resumed from the current checkpoint.",
-          updatedAt: Date.now()
-        });
-      }
-      sendResponse({ ok: true });
-      return;
-    }
-
     if (message.type === "OPEN_BETTER_SEARCH") {
       const url = new URL(chrome.runtime.getURL("src/search.html"));
       if (message.query) url.searchParams.set("q", String(message.query));
@@ -98,16 +63,6 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
 
     if (message.type === "GET_ARCHIVE_STATS") {
       sendResponse({ ok: true, stats: await getArchiveStats() });
-      return;
-    }
-
-    if (message.type === "LIST_SESSIONS") {
-      sendResponse({ ok: true, sessions: await listSessions() });
-      return;
-    }
-
-    if (message.type === "GET_SESSION") {
-      sendResponse({ ok: true, session: await getSession(message.conversationId) });
       return;
     }
 
@@ -239,41 +194,6 @@ async function fetchWithTimeout(url, options = {}, meta = {}) {
 }
 
 /**
- * Runs automatic enrichment while keeping work attached to the service-worker event.
- * Authentication failures disable further automatic requests to that provider in the batch.
- * @param {object[]} messages
- * @returns {Promise<{processed:number,errors:object[]}>}
- */
-async function enrichBatch(messages) {
-  const disabledProviders = new Set();
-  const errors = [];
-  let processed = 0;
-
-  for (const message of messages) {
-    try {
-      await enrichMessage(message, {
-        disabledProviders,
-        continueOnProviderError: true,
-        onError: error => errors.push({
-          messageId: message.id,
-          provider: error.provider || "unknown",
-          error: error.message
-        })
-      });
-      processed += 1;
-    } catch (error) {
-      errors.push({
-        messageId: message.id,
-        provider: error.provider || "unknown",
-        error: error.message
-      });
-    }
-  }
-
-  return { processed, errors };
-}
-
-/**
  * Executes one provider action with optional batch-level failure containment.
  * @param {string} provider
  * @param {object} context
@@ -366,7 +286,7 @@ async function enrichMessage(message, context = {}) {
 }
 
 /**
- * Fetches a Messenger voice message and transcribes it with ElevenLabs.
+ * Transcribes an imported voice attachment with ElevenLabs.
  * @param {string} url
  * @param {string} key
  * @returns {Promise<string>}
@@ -375,7 +295,7 @@ async function transcribeAudio(url, key) {
   const audio = await fetchWithTimeout(
     url,
     { credentials: "include" },
-    { provider: "messenger-media", timeoutMs: MEDIA_TIMEOUT_MS }
+    { provider: "archive-media", timeoutMs: MEDIA_TIMEOUT_MS }
   );
   const blob = await audio.blob();
   const form = new FormData();
@@ -396,7 +316,7 @@ async function transcribeAudio(url, key) {
 }
 
 /**
- * Downloads a Messenger image and converts it to an inline data URL for vision.
+ * Loads an imported image reference and converts it to an inline data URL for vision.
  * @param {string} url
  * @returns {Promise<string>}
  */
@@ -404,7 +324,7 @@ async function fetchAsDataUrl(url) {
   const media = await fetchWithTimeout(
     url,
     { credentials: "include" },
-    { provider: "messenger-media", timeoutMs: MEDIA_TIMEOUT_MS }
+    { provider: "archive-media", timeoutMs: MEDIA_TIMEOUT_MS }
   );
   const blob = await media.blob();
   const bytes = new Uint8Array(await blob.arrayBuffer());
@@ -419,7 +339,7 @@ async function fetchAsDataUrl(url) {
 }
 
 /**
- * Produces OCR-like searchable visual context for a captured image.
+ * Produces OCR-like searchable visual context for an imported image.
  * @param {string} url
  * @param {string} key
  * @returns {Promise<string>}
