@@ -130,6 +130,21 @@ export async function getMessages(conversationId) {
 }
 
 /**
+ * Loads all archived messages, newest last.
+ * @returns {Promise<object[]>}
+ */
+export async function getAllMessages() {
+  const db = await openDb();
+  const transaction = db.transaction("messages", "readonly");
+  const result = await requestResult(
+    transaction.objectStore("messages").getAll()
+  );
+  return (result || []).sort(
+    (a, b) => (a.timestamp || 0) - (b.timestamp || 0)
+  );
+}
+
+/**
  * Returns how many records already exist for each import fingerprint.
  * @param {string} conversationId
  * @returns {Promise<Map<string, number>>}
