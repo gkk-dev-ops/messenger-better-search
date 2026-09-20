@@ -65,7 +65,7 @@ test("injects Open in Better Search beside Messenger conversation search and for
     const messenger = await context.newPage();
     await messenger.goto("https://www.messenger.com/t/fixture");
 
-    const input = messenger.getByLabel("Search in conversation");
+    const input = messenger.getByRole("textbox", { name: "Search in conversation" });
     await expect(input).toBeVisible();
 
     const button = messenger.getByRole("button", {
