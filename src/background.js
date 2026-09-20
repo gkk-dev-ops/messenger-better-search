@@ -1,4 +1,5 @@
 import {
+  getAllMessages,
   getArchiveStats,
   getEmbeddings,
   getMessages,
@@ -525,7 +526,9 @@ async function searchMessages({
   to = null,
   semantic = false
 }) {
-  const messages = await getMessages(conversationId);
+  const messages = conversationId && conversationId !== "*"
+    ? await getMessages(conversationId)
+    : await getAllMessages();
   const hasDateBoundary = Boolean(from || to);
 
   const filtered = messages.filter(message => {
