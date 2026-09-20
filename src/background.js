@@ -83,6 +83,14 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
       return;
     }
 
+    if (message.type === "OPEN_BETTER_SEARCH") {
+      const url = new URL(chrome.runtime.getURL("src/search.html"));
+      if (message.query) url.searchParams.set("q", String(message.query));
+      await chrome.tabs.create({ url: url.toString() });
+      sendResponse({ ok: true });
+      return;
+    }
+
     if (message.type === "LIST_CONVERSATIONS") {
       sendResponse({ ok: true, conversations: await listConversations() });
       return;
